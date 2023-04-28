@@ -1,5 +1,4 @@
 import pygame
-from player import y_pos
 from settings import *
 from Sphere import Sphere
 import random
@@ -10,6 +9,8 @@ screen = pygame.display.set_mode([WIDTH, HEIGHT])
 clock = pygame.time.Clock()
 sphere = Sphere(random.randint(150, HEIGHT - 150), random.randint(150, WIDTH - 150), random.choice([-1, 1]), random.choice([-1, 1]))
 running = True
+
+y_pos = 0
 while running:
 
     for event in pygame.event.get():
@@ -22,7 +23,7 @@ while running:
         y_pos += 5
     if keys[pygame.K_w]:
         y_pos -= 5
-    sphere.update()
+    sphere.update(y_pos)
     pygame.draw.rect(screen, (255, 255, 255), (10, y_pos, 10, 150), 1)
     pygame.draw.circle(screen, (255, 255, 255), (sphere.x, sphere.y), 10)
     pygame.display.flip()
