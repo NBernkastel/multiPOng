@@ -1,5 +1,3 @@
-import pygame
-
 from settings import *
 
 
@@ -33,5 +31,5 @@ class Sphere:
             self.x = WIDTH / 2
             self.y = HEIGHT / 2
 
-    def draw(self):
+    def draw(self) -> None:
         pygame.draw.circle(screen, self.__color, (self.x, self.y), self.__R)

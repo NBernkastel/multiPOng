@@ -1,5 +1,6 @@
 import pygame
 
+FPS = 144
 HEIGHT = 800
 WIDTH = 800
 screen = pygame.display.set_mode([WIDTH, HEIGHT])

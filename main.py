@@ -1,55 +1,65 @@
-import asyncio
-import time
-
 from player import Player
 from settings import *
 from Sphere import Sphere
-import random
-
 from tcp import TcpConnect
 
-pygame.init()
-clock = pygame.time.Clock()
-sphere = Sphere(150, 150, 1, 1)
-running = True
 
-player1 = Player()
-player2 = Player()
-player2.x_pos = WIDTH - 10
+class Game:
+    def __init__(self):
+        pygame.init()
+        self.clock = pygame.time.Clock()
+        self.sphere = Sphere(150, 150, 1, 1)
+        self.running = True
+        self.player1 = Player()
+        self.player2 = Player()
+        self.player2.x_pos = WIDTH - 10
 
-# Ask user if they want to start as host or client
-host = input("Do you want to start as host? (y/n) ").lower() == 'y'
-time.sleep(10)
-# Establish connection before the game loop
-if host:
-    TcpConnect.bind(IP, PORT)
-else:
-    TcpConnect.connect(IP, PORT)
+        # Ask user if they want to start as host or client
+        self.host = input("Do you want to start as host? (y/n) ").lower() == 'y'
+        if self.host:
+            TcpConnect.bind(IP, PORT)
+        else:
+            TcpConnect.connect(IP, PORT)
 
-while running:
-    dt = clock.get_time()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    def network(self):
+        TcpConnect.senddata(f'{round(self.player1.y_pos, 6)}'
+                            f' {round(self.sphere.x, 6)}'
+                            f' {round(self.sphere.y, 6)}'
+                            f' {round(self.sphere.x_dir, 6)}'
+                            f' {round(self.sphere.y_dir, 6)}'.encode('utf-8'))
+        try:
+            data = TcpConnect.getdata().decode().split(' ')
+            self.player2.y_pos = float(data[0])
+            if not self.host:
+                self.sphere.x = WIDTH - float(data[1])
+                self.sphere.y = float(data[2])
+                self.sphere.x_dir = float(data[3])
+                self.sphere.y_dir = float(data[4])
+        except:
+            pass
 
-    screen.fill((0, 0, 0))
-    # Screen clean
-    sphere.update(player1.y_pos, player2.y_pos, dt, player1.size, player2.size)
-    TcpConnect.senddata(f'{round(player1.y_pos, 6)} {round(sphere.x, 6)} {round(sphere.y, 6)}'.encode('utf-8'))
-    try:
-        data = TcpConnect.getdata().decode().split(' ')
-        player2.y_pos = float(data[0])
-        if not host:
-            sphere.x = WIDTH - float(data[1])
-            sphere.y = float(data[2])
-    except:
-        pass
-    player1.update(dt)
-    player2.update(dt)
-    pygame.display.flip()
-    clock.tick(120)  # Cap the frame rate at 60 FPS
+    def run(self):
+        while self.running:
+            dtime = self.clock.get_time()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+            # Screen clean
+            screen.fill((0, 0, 0))
+            # network work)
+            self.network()
+            # update part
+            self.sphere.update(self.player1.y_pos, self.player2.y_pos, dtime, self.player1.size, self.player2.size)
+            self.player1.update(dtime)
+            self.player2.update(dtime)
+            # end part
+            pygame.display.flip()
+            self.clock.tick(FPS)
+        # if game closed
+        TcpConnect.close()
+        pygame.quit()
 
-# Close connection after the game loop
-TcpConnect.close()
 
-pygame.quit()
+if __name__ == '__main__':
+    game = Game()
+    game.run()
