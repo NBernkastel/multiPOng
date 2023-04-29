@@ -10,8 +10,7 @@ from tcp import TcpConnect
 
 pygame.init()
 clock = pygame.time.Clock()
-sphere = Sphere(random.randint(150, HEIGHT - 150), random.randint(150, WIDTH - 150), random.choice([-1, 1]),
-                random.choice([-1, 1]))
+sphere = Sphere(150, 150, 1, 1)
 running = True
 
 player1 = Player()
@@ -20,7 +19,7 @@ player2.x_pos = WIDTH - 10
 
 # Ask user if they want to start as host or client
 host = input("Do you want to start as host? (y/n) ").lower() == 'y'
-
+time.sleep(10)
 # Establish connection before the game loop
 if host:
     TcpConnect.bind(IP, PORT)
@@ -36,23 +35,19 @@ while running:
     screen.fill((0, 0, 0))
     # Screen clean
     sphere.update(player1.y_pos, player2.y_pos, dt, player1.size, player2.size)
-    if host:
-        TcpConnect.senddata(str(player1.y_pos).encode('utf-8'))
-        try:
-            player2.y_pos = float(TcpConnect.getdata().decode())
-        except:
-            pass
-    else:
-        TcpConnect.senddata(str(player1.y_pos).encode('utf-8'))
-        try:
-            player2.y_pos = float(TcpConnect.getdata().decode())
-        except:
-            pass
-
+    TcpConnect.senddata(f'{round(player1.y_pos, 6)} {round(sphere.x, 6)} {round(sphere.y, 6)}'.encode('utf-8'))
+    try:
+        data = TcpConnect.getdata().decode().split(' ')
+        player2.y_pos = float(data[0])
+        if not host:
+            sphere.x = WIDTH - float(data[1])
+            sphere.y = float(data[2])
+    except:
+        pass
     player1.update(dt)
     player2.update(dt)
     pygame.display.flip()
-    clock.tick(60)  # Cap the frame rate at 60 FPS
+    clock.tick(120)  # Cap the frame rate at 60 FPS
 
 # Close connection after the game loop
 TcpConnect.close()
