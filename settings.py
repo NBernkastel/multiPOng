@@ -1,8 +1,8 @@
 import pygame
-
-FPS = 144
-HEIGHT = 800
+NET = True
+FPS = 120
+HEIGHT = 600
 WIDTH = 800
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
-IP = '192.168.0.102'
+IP = '26.185.58.8'
 PORT = 8000

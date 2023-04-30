@@ -5,7 +5,7 @@ class Sphere:
     def __init__(self, x: float, y: float, x_dir: int, y_dir: int) -> None:
         self.x = x
         self.y = y
-        self.speed = 0.1
+        self.speed = 0.3
         self.x_dir = x_dir
         self.y_dir = y_dir
         self.__color = (255, 255, 255)

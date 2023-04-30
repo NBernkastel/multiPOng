@@ -16,12 +16,13 @@ class Game:
 
         # Ask user if they want to start as host or client
         self.host = input("Do you want to start as host? (y/n) ").lower() == 'y'
-        if self.host:
-            TcpConnect.bind(IP, PORT)
-        else:
-            TcpConnect.connect(IP, PORT)
+        if NET:
+            if self.host:
+                TcpConnect.bind(IP, PORT)
+            else:
+                TcpConnect.connect(IP, PORT)
 
-    def network(self):
+    def network(self) -> bool:
         TcpConnect.senddata(f'{round(self.player1.y_pos, 6)}'
                             f' {round(self.sphere.x, 6)}'
                             f' {round(self.sphere.y, 6)}'
@@ -47,7 +48,8 @@ class Game:
             # Screen clean
             screen.fill((0, 0, 0))
             # network work)
-            self.network()
+            if NET:
+                self.network()
             # update part
             self.sphere.update(self.player1.y_pos, self.player2.y_pos, dtime, self.player1.size, self.player2.size)
             self.player1.update(dtime)

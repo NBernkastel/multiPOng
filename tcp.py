@@ -4,6 +4,9 @@ import time
 class TcpConnect:
     client_sock = None
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 32)
+    sock.setblocking(False)
     is_server = False
 
     @classmethod
@@ -24,7 +27,7 @@ class TcpConnect:
 
     @classmethod
     def getdata(cls) -> bytes:
-        data = cls.client_sock.recv(24) if cls.is_server else cls.sock.recv(24)
+        data = cls.client_sock.recv(32) if cls.is_server else cls.sock.recv(32)
         return data
 
     @classmethod
