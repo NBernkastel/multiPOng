@@ -1,7 +1,7 @@
 from player import Player
 from settings import *
 from Sphere import Sphere
-from tcp import TcpConnect
+from tcp import UdpConnect
 
 
 class Game:
@@ -18,19 +18,18 @@ class Game:
         self.host = input("Do you want to start as host? (y/n) ").lower() == 'y'
         if NET:
             if self.host:
-                TcpConnect.bind(IP, PORT)
+                UdpConnect.bind(IP, PORT)
             else:
-                TcpConnect.connect(IP, PORT)
+                UdpConnect.connect(IP, PORT)
 
     def network(self) -> bool:
-        TcpConnect.senddata(f'{round(self.player1.y_pos, 2)}'
+        UdpConnect.senddata(f'{round(self.player1.y_pos, 2)}'
                             f' {round(self.sphere.x, 2)}'
                             f' {round(self.sphere.y, 2)}'
                             f' {round(self.sphere.x_dir, 2)}'
                             f' {round(self.sphere.y_dir, 2)}'.encode('utf-8'))
         try:
-            data = TcpConnect.getdata().decode().split(' ')
-            print(data)
+            data = UdpConnect.getdata().decode().split(' ')
             self.player2.y_pos = float(data[0])
             if not self.host:
                 self.sphere.x = WIDTH - float(data[1])
@@ -59,7 +58,7 @@ class Game:
             pygame.display.flip()
             self.clock.tick(FPS)
         # if game closed
-        TcpConnect.close()
+        UdpConnect.close()
         pygame.quit()
 
 
