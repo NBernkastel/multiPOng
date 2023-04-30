@@ -23,13 +23,14 @@ class Game:
                 TcpConnect.connect(IP, PORT)
 
     def network(self) -> bool:
-        TcpConnect.senddata(f'{round(self.player1.y_pos, 6)}'
-                            f' {round(self.sphere.x, 6)}'
-                            f' {round(self.sphere.y, 6)}'
-                            f' {round(self.sphere.x_dir, 6)}'
-                            f' {round(self.sphere.y_dir, 6)}'.encode('utf-8'))
+        TcpConnect.senddata(f'{round(self.player1.y_pos, 2)}'
+                            f' {round(self.sphere.x, 2)}'
+                            f' {round(self.sphere.y, 2)}'
+                            f' {round(self.sphere.x_dir, 2)}'
+                            f' {round(self.sphere.y_dir, 2)}'.encode('utf-8'))
         try:
             data = TcpConnect.getdata().decode().split(' ')
+            print(data)
             self.player2.y_pos = float(data[0])
             if not self.host:
                 self.sphere.x = WIDTH - float(data[1])
