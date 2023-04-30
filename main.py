@@ -27,7 +27,7 @@ class Game:
                             f' {round(self.sphere.x, 2)}'
                             f' {round(self.sphere.y, 2)}'
                             f' {round(self.sphere.x_dir, 2)}'
-                            f' {round(self.sphere.y_dir, 2)}'.encode('utf-8'))
+                            f' {round(self.sphere.y_dir, 2)}'.encode('utf-8'),IP,PORT)
         try:
             data = UdpConnect.getdata().decode().split(' ')
             self.player2.y_pos = float(data[0])

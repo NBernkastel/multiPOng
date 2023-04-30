@@ -4,7 +4,6 @@ import socket
 class UdpConnect:
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     is_server = False
-
     @classmethod
     def bind(cls, ip: str, port: int) -> None:
         """Work like a server, listen and get client socket"""
@@ -14,7 +13,6 @@ class UdpConnect:
     @classmethod
     def connect(cls, ip: str, port: int) -> None:
         """Work like a client, will connect you to host"""
-        cls.server_address = (ip, port)
         cls.is_server = False
 
     @classmethod
@@ -23,8 +21,8 @@ class UdpConnect:
         return data
 
     @classmethod
-    def senddata(cls, data: any) -> None:
-        cls.sock.sendto(data, cls.server_address)
+    def senddata(cls, data: any , ip: str, port: int) -> None:
+        cls.sock.sendto(data, (ip,port))
 
     @classmethod
     def close(cls) -> None:
