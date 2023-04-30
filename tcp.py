@@ -3,18 +3,16 @@ import time
 
 class TcpConnect:
     client_sock = None
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 32)
-    sock.setblocking(False)
     is_server = False
     @classmethod
     def bind(cls, ip: str, port: int) -> None:
         """Work like a server, listen and get client socket"""
-        cls.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        cls.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cls.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         cls.sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 32)
-        cls.sock.setblocking(False)
         cls.sock.bind((ip, port))
         cls.sock.listen(1)
         cls.client_sock, cls.adr = cls.sock.accept()
@@ -23,10 +21,9 @@ class TcpConnect:
     @classmethod
     def connect(cls, ip: str, port: int) -> None:
         """Work like a client, will connect you to host"""
-        cls.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        cls.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cls.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         cls.sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 32)
-        cls.sock.setblocking(False)
         cls.sock.connect((ip, port))
         cls.is_server = False
 
