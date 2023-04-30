@@ -23,6 +23,11 @@ class Game:
                 TcpConnect.connect(IP, PORT)
 
     def network(self) -> bool:
+        TcpConnect.senddata(f'{round(self.player1.y_pos, 2)}'
+                            f' {round(self.sphere.x, 2)}'
+                            f' {round(self.sphere.y, 2)}'
+                            f' {round(self.sphere.x_dir, 2)}'
+                            f' {round(self.sphere.y_dir, 2)}'.encode('utf-8'))
         try:
             data = TcpConnect.getdata().decode().split(' ')
             self.player2.y_pos = float(data[0])
@@ -33,11 +38,6 @@ class Game:
                 self.sphere.y_dir = float(data[4])
         except:
             pass
-        TcpConnect.senddata(f'{round(self.player1.y_pos, 2)}'
-                            f' {round(self.sphere.x, 2)}'
-                            f' {round(self.sphere.y, 2)}'
-                            f' {round(self.sphere.x_dir, 2)}'
-                            f' {round(self.sphere.y_dir, 2)}'.encode('utf-8'))
 
     def run(self):
         while self.running:
