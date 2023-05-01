@@ -22,7 +22,7 @@ class Game:
             else:
                 TcpConnect.connect(IP, PORT)
 
-    def network(self) -> bool:
+    def network(self) -> None:
         TcpConnect.senddata(f'{round(self.player1.y_pos, 2)}'
                             f' {round(self.sphere.x, 2)}'
                             f' {round(self.sphere.y, 2)}'

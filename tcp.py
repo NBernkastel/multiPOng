@@ -5,14 +5,12 @@ class TcpConnect:
     client_sock = None
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-    sock.setblocking(False)
     is_server = False
     @classmethod
     def bind(cls, ip: str, port: int) -> None:
         """Work like a server, listen and get client socket"""
         cls.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cls.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        cls.sock.setblocking(False)
         cls.sock.bind((ip, port))
         cls.sock.listen(1)
         try:
@@ -26,7 +24,6 @@ class TcpConnect:
         """Work like a client, will connect you to host"""
         cls.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         cls.sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        cls.sock.setblocking(False)
         try:
             cls.sock.connect((ip, port))
         except:
